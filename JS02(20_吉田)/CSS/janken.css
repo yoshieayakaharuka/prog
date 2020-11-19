@@ -1,0 +1,105 @@
+img{
+    width: 100%;
+    height:auto;
+}
+
+.top_text{
+    position: absolute;
+    top:40%;
+    left:50%;
+    transform: translate3d(-50%,-50%,0);
+    font-weight: bold;
+    text-align: center;
+    font-size:3.5rem;
+    color:#ff2599;
+    font-family: 'Kosugi Maru', sans-serif;
+    
+}
+
+.start_btn{
+    position: absolute;
+    top:70%;
+    left:50%;
+    transform: translate3d(-50%,-50%,0)
+}
+
+.none{
+    display: none;
+}
+
+
+.gu_cyoki_pa{
+    list-style: none;
+    display:flex;
+    position: absolute;
+    top:60%;
+    left:50%;
+    transform: translate3d(-50%,-50%,0);
+}
+
+.top_text2{
+    position: absolute;
+    top:30%;
+    left:50%;
+    transform: translate3d(-50%,-50%,0);
+    font-weight: bold;
+    text-align: center;
+    font-size:2.4rem;
+    color:#ff2599;
+    font-family: 'Kosugi Maru', sans-serif;
+}
+
+.jankenpon{
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate3d(-50%,-50%,0);
+}
+
+.jankenhoi{
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate3d(-50%,-50%,0);
+
+}
+
+.win_lose{
+    position: absolute;
+    top:30%;
+    left:50%;
+    transform: translate3d(-50%,-50%,0);
+    font-weight: bold;
+    text-align: center;
+    font-size:2.7rem;
+    line-height: 3.5rem;
+    color:#ff2599;
+    font-family: 'Kosugi Maru', sans-serif;
+    width: 1000px;
+}
+
+
+.kachi{
+    width:40%;
+    position: absolute;
+    top:70%;
+    left:50%;
+    transform: translate3d(-50%,-50%,0);
+}
+
+
+.make{
+    width:30%;
+    position: absolute;
+    top:65%;
+    left:50%;
+    transform: translate3d(-50%,-50%,0);
+}
+
+.hiki{
+    width:45%;
+    position: absolute;
+    top:65%;
+    left:50%;
+    transform: translate3d(-35%,-50%,0);
+}
