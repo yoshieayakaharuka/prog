@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+
+<link rel="stylesheet" href="css/studymemo.css">
+<title>Chatアプリ</title>
+</head>
+<body >
+
+<!-- コンテンツ表示画面 -->
+
+<h1>2ちゃんねるごっこ</h1>
+
+<div class="line">
+    <div>
+        なまえ <input type="text" id="uname" >
+    </div>
+    <div>
+        <textarea id="text" cols="30" rows="10"></textarea>
+        <button id="send">送信</button>
+    </div>
+
+    <h4>2ちゃんねる■掲示板に戻る■</h4>
+    <h3>☆★今日あったことを語るスレ★☆</h3>
+    <div id="output"></div> 
+
+    
+    <!---表示箇所-->
+</div>
+
+
+
+
+<!--/ コンテンツ表示画面 -->
+
+
+
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- JQuery -->
+
+
+<!--** 以下Firebase **-->
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyCuYKX3nfAd9pWgr3R8DXxnRcpbIzYBfFs",
+    authDomain: "gsdemo-95daf.firebaseapp.com",
+    projectId: "gsdemo-95daf",
+    storageBucket: "gsdemo-95daf.appspot.com",
+    messagingSenderId: "84069064074",
+    appId: "1:84069064074:web:a6be659009aebdf77b7c73"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+ const ref =firebase.database().ref();
+ //ref()の中にディレクトリを構造を書くとそのデータ構造で保存できます
+
+
+
+ 
+
+
+
+//送信イベント
+$("#send").on("click",function(){
+    const uname = $("#uname").val();
+    const text = $("#text").val();
+
+
+var newDate = new Date();
+var year =newDate.getFullYear();
+var month =newDate.getMonth()+1;
+var day =newDate.getDate();
+var hour =newDate.getHours();
+var min =newDate.getMinutes();
+var sec =newDate.getSeconds();
+var today = year + '/' + month + '/' + day + ' ' + hour + ":" + min + ":" + sec;
+
+console.log(today);
+
+
+
+
+    const msg ={
+        uname: uname,  //送信名：値
+        text:text,//送信名：値
+        today:today
+    };
+    ref.push(msg); //サーバーにプッシュ 投げる
+
+    $('#output').animate({ scrollTop: $('#output')[0].scrollHeight});
+});
+
+
+
+
+//受信イベント
+ref.on("child_added",function(data){
+    const v =data.val(); //このタイミングでdataオブジェクトの中のデータを取得
+    const k =data.key; //keyを取得（削除に必要らしい）
+
+    const h ='<p>'+v.uname+" : "+v.today+'<br>'+v.text+'</p>';
+
+    $("#output").append(h);
+
+
+});
+
+
+
+//Enterで送信イベント
+$("#text").on("keydown",function(e){
+   //console.log(e.keyCode);
+if(e.keyCode==13){
+    const uname = $("#uname").val();
+    const text = $("#text").val();
+    const msg ={
+        uname: uname,  //送信名：値
+        text:text, //送信名：値
+        today:today
+    };
+    ref.push(msg); 
+}
+});
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

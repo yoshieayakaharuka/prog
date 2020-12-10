@@ -1,0 +1,45 @@
+body{
+    height: auto;
+    background-color: #dadac9dc;
+    color: #333333;
+    font-size: 1.2rem;
+    font-family: "Open Sans","Hiragino Kaku Gothic Pro";   
+  }
+
+  .line{
+  text-align: center;
+  border-radius:10px;
+  }
+
+  #uname{
+    width:auto;
+  
+    }
+
+  #output{
+    height: 500px;
+    width:auto;
+    overflow: auto; 
+    border:1px solid black;
+    text-align: left;
+  
+  }
+
+  h3{
+  color:red;
+  text-align: left;
+
+  }
+
+  h1{
+    text-align: center;
+  }
+  
+  h4{
+    text-align: left;
+    text-decoration: underline;
+    color:#6a397d;
+
+  }
+
+
