@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>canvas_base.html</title>
+</head>
+
+<body>
+    <section>
+        <h1>Canvas</h1>
+        <nav>
+            <!-- 線の色を変更するHTML要素 -->
+            <input type="color" id="color" value=""> 
+
+
+            <!-- 線の太さを変更するHTML要素 -->
+            <input type="range" id="range" min="1" max="100" value="" step="10">
+
+            <button id="clear_btn">クリアー</button>
+
+            <button id="e_btn">けしごむ</button> 
+            <button id="save_btn">保存</button> 
+            保存番号<select id ="saveid"></select>
+            呼出番号<select id ="callid" vall=""></select>
+            <button id="call_btn">呼出</button> 
+            
+        </nav>
+        <canvas id="drowarea" width="500" height="500" style="border:1px solid blue;"></canvas>
+        <canvas id="drowarea2" width="500" height="500" style="border:1px solid blue;" img=""></canvas>
+    </section>
+
+
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <script>
+        //初期化(変数letで宣言)
+        let canvas_mouse_event = false; //スイッチ [ true=線を引く, false=線は引かない ]  ＊＊＊
+        let oldX = 0; //１つ前の座標を代入するための変数
+        let oldY = 0; //１つ前の座標を代入するための変数
+        let bold_line = 0; //ラインの太さをここで指定
+        let color = 0; //ラインの色をここで指定
+        let dx = 0;//けしごむx
+        let dy = 0;//消しゴムy
+
+        //------------------------------------------------
+        //const can = $("#drowarea")[0]; //CanvasElement
+        //const ctx = can.getContext("2d"); //描画するための準備！
+        //------------------------------------------------
+        //上2つのスクリプトを記述します。
+        const can = $("#drowarea")[0]; //CanvasElement
+        const ctx = can.getContext("2d"); //描画するための準備！
+    
+
+
+        //mousedown：フラグをTrue
+        //-----------------------------------------------
+        //oldX = e.offsetX;       //MOUSEDOWNしたX横座標取得
+        //oldY = e.offsetY; //MOUSEDOWN Y高さ座標取得
+        //canvas_mouse_event=true;
+        //-----------------------------------------------
+        //上5つのスクリプトを記述します。
+        $(can).on("mousedown",function(e){ //イベントのe
+        console.log(e);
+        oldX=e.offsetX; //現時点xをoldxに代入
+        oldX=e.offsetY; //現時点xをoldyに代入
+        canvas_mouse_event=true; //書くぞースイッチオン
+        });
+
+        //mousemove：フラグがTrueだったら描く ※e：イベント引数取得
+        //----------------------------------------------
+        //  if(canvas_mouse_event==true){
+        //      const px = e.offsetX;
+        //      const py = e.offsetY;
+        //      ctx.strokeStyle = color;
+        //      ctx.lineWidth = bold_line;
+        //      ctx.beginPath();
+        //      ctx.lineJoin= "round";
+        //      ctx.lineCap = "round";
+        //      ctx.moveTo(oldX, oldY);
+        //      ctx.lineTo(px, py);
+        //      ctx.stroke();
+        //      oldX = px;
+        //      oldY = py;
+        //  }
+//mousemoveイベント
+$(can).on("mousemove",function(e){
+    if(canvas_mouse_event==true){
+        const px = e.offsetX;//現在地x
+        const py = e.offsetY;//現在地y
+        ctx.strokeStyle = color;//線の色
+        ctx.lineWidth = bold_line;//太さ
+        ctx.beginPath();//初期化
+        ctx.lineJoin= "round";//丸み
+        ctx.lineCap = "round";//丸み
+        ctx.moveTo(oldX, oldY);
+        ctx.lineTo(px, py);
+        ctx.stroke();
+        oldX = px;//入れ替え
+        oldY = py;//入れ替え
+    }
+});
+
+        //mouseup：フラグをfalse
+        //------------------------------------------------
+        //    canvas_mouse_event=false;
+        //------------------------------------------------
+$(can).on("mouseup",function(){
+canvas_mouse_event=false;
+});
+
+$(can).on("mouseout",function(){
+canvas_mouse_event=false;
+});
+
+
+
+
+        //#clear_btn：クリアーボタンAction
+        //-----------------------------------------------------------------
+        //    ctx.beginPath();
+        //    ctx.clearRect(0, 0, can.width, can.height);
+        //-----------------------------------------------------------------
+
+$("#clear_btn").on("click",function(){
+    ctx.beginPath();
+    ctx.clearRect(0, 0, can.width, can.height);
+}); 
+
+$("#e_btn").on("click",function(){
+    color='#ffff'; 
+    ctx.arc(oldX, oldY, 100, 0, Math.PI * 2, false); // full circle
+        ctx.stroke();
+});
+
+
+
+//メモ番号　
+let saveid ="";
+for(let i =1; i<=5; i++){
+    saveid += "<option>"+i+"</option>" 
+}
+$("#saveid").html(saveid);
+
+//呼び出し番号　
+let calld ="";
+for(let i =1; i<=5; i++){
+    callid += "<option>"+i+"</option>" 
+}
+$("#callid").html(callid);
+
+
+
+
+
+$("#save_btn").click(function() {
+var drowarea = document.getElementById('drowarea');
+var dataURL = drowarea.toDataURL();
+const saveid = $("#saveid").val();
+console.log(dataURL);
+
+window.localStorage.setItem(saveid,dataURL);
+
+});
+
+$("#call_btn").click(function() {
+    const callid= $("#callid").val();
+    var imageget=window.localStorage.getItem(callid);
+    var image =new Image();
+    image.src=imageget;
+    image.onload=function(){
+    drowarea2.drawImage(image,0,0);
+    };
+
+    const html=image
+    $("#drowarea2").append(image);
+    
+});
+
+
+function setBgColor(){
+      // canvasの背景色を設定(指定がない場合にjpeg保存すると背景が黒になる)
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0,0,cnvWidth,cnvHeight);
+    }
+
+
+
+
+
+        //円の設定（X中心軸,Y中心軸、半径、円のスタート度、円のエンド度、回転）
+        //ctx.arc(100, 100, 50, 0, Math.PI, false); // full circle
+        //ctx.arc(100, 100, 50, 0, Math.PI * 2, false); // full circle
+        //ctx.stroke();
+
+
+
+
+$("#color").on("change",function(){
+    const c = $(this).val(); //色値の取
+    color=c; 
+    console.log(c);
+});
+
+$("#range").on("change",function(){
+const r =$(this).val();
+bold_line=r; 
+//スライダーの値を取得
+});
+
+
+
+
+
+</script>
+</body>
+
+</html>
