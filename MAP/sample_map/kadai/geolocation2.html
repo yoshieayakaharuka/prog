@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Map:Geolocation</title>
+<style>html,body{height:100%;}body{padding:0;margin:0;}h1{padding:0;margin:0;font-size:50%;}</style>
+</head>
+<body>
+
+
+<!-- MAP[START]3a0ae44ff565ff6533f400869ffc5ccb"-->
+<h1 style='font-size:30px;color:red'>不審者情報</h1>
+<!-- アクセスキーを入力<input id="key" value="******MyKeyを貼り付ける******" type="text" size="45">-->
+<input type="button" id="btn" value="送信"><br>
+現在地緯度: <input type="text" id="lat" value="">
+現在地経度: <input type="text" id="lon" value="">
+<div id="myMap" style='width:60%;height:70%;float:left;'></div>
+
+
+<table id="table">
+    <tr>
+        <th style='width:15%'>住所</th>
+        <th style='width:30%'>カテゴリ</th>
+        <th style='width:55%'>特徴</th>
+    </tr>
+</table>
+
+
+<!-- MAP[END] -->
+
+
+<!---------->
+<script src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=' async defer></script>
+<script src="../js/BmapQuery.js"></script>
+
+
+<!---------->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+<script>
+//****************************************************************************************
+// BingMaps&BmapQuery
+//****************************************************************************************
+//Init
+function GetMap(){
+    //------------------------------------------------------------------------
+    //1. Instance
+    //------------------------------------------------------------------------
+    const map = new Bmap("#myMap");
+
+
+    //------------------------------------------------------------------------
+    //2. geolocation: Display Map
+    //   map.geolocation(function(data:object){...});
+    //------------------------------------------------------------------------
+    map.geolocation(function(data) {
+        //location
+
+        const lat = data.coords.latitude; //現在地を取得緯度  data.coords.latitude
+        const lon = data.coords.longitude;//現在地を取得経度  data.coords.longitude
+        //Map
+        map.startMap(lat,lon, "load", 15);
+        //pin
+        map.pin(lat,lon,"#ff0000");
+    
+
+        const style = {
+        pinColor:"#0000ff",//pinのカラー
+        fillColor:"rgba(0,0,100,0.1)",//0.6は透明度
+        strokeWidth:1,//外枠の線の太さを指定
+
+        
+    };
+    map.circle(1000, style); //1000m = 1km, 2000 = 2Km自分かいる場所からの半径
+    map.circle(2000, style); //1000m = 1km, 2000 = 2Km
+
+
+
+    $("#lat").val(data.coords.latitude);//一番最初に定義した緯度を現在地に書き換え
+    $("#lon").val(data.coords.longitude);//一番最初に定義した経度を現在地に書き換え
+
+
+
+
+                //------以下オープンデータから自作したジェイソン
+
+                $("#btn").on("click", function() {
+                    //送信データをObject変数で用意
+                    //参考URL:https://api.gnavi.co.jp/api/manual/restsearch/
+
+                    var url = '../jojo.json';//ジェイソンからデータ取得
+                    $.getJSON(url, function(data){
+                    console.log(data);
+
+                        const len  = data.length; //データ数を取得
+                        console.log(len);
+                        
+                        for( let i=0; i<len; i++){
+                        const options=[]; 
+                        $("#table").append('<tr><td>' + data[i].day + '</td><td>' + data[i].adress+  '</td><td>' +data[i].memo2+ '</td></tr>')
+                        map.pinText(data[i].latitude,data[i].longitude,data[i].day,data[i].memo);
+
+
+                            data[i]={
+                            "day":data[i].day,
+                            "adress":data[i].adress,
+                            "id":data[i].id,//必須のmyid
+                            "latitude":data[i].latitude,//緯度
+                            "longitude":data[i].longitude,//経度 
+                            "memo":data[i].memo,
+                            "pincolor":"#ff0000",
+                            "show":false
+                            };
+                       };
+                       //map.infoboxLayers(data,true); 
+                    });
+                
+                   
+                    //Ajax（非同期通信）
+                    //axios.get('', {
+                        //params:data
+                    //})
+                    //.then(function (response) {
+                        //データ受信成功！！showData関数にデータを渡す
+                        //showData(response.data);
+                    //}).catch(function (error) {
+                        //console.log(error);//通信Error
+                    //}).then(function () {
+                        //console.log("Last");//通信OK/Error後に処理を必ずさせたい場合
+                    //});
+            
+                });
+                
+    });
+
+}
+
+
+
+
+
+
+</script>
+</body>
+</html>
